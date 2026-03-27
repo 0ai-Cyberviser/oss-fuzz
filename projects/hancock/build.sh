@@ -15,18 +15,15 @@
 #
 ################################################################################
 
-#!/bin/bash -eu
-
-python3 -m pip install --upgrade pip
 pip3 install -r requirements.txt
-pip3 install atheris
 
-# Your exact Atheris fuzz targets (built from the live repo scan)
-python3 -m atheris fuzz/fuzz_api_inputs.py -o $OUT/fuzz_api_inputs --no-redirect-output
-python3 -m atheris fuzz/fuzz_formatter.py -o $OUT/fuzz_formatter --no-redirect-output
-python3 -m atheris fuzz/fuzz_mitre_parser.py -o $OUT/fuzz_mitre_parser --no-redirect-output
-python3 -m atheris fuzz/fuzz_nvd_parser.py -o $OUT/fuzz_nvd_parser --no-redirect-output
-python3 -m atheris fuzz/fuzz_webhook_signature.py -o $OUT/fuzz_webhook_signature --no-redirect-output
+# Build fuzzers in $OUT.
+for fuzzer in $(find $SRC/hancock/fuzz -name 'fuzz_*.py'); do
+  compile_python_fuzzer $fuzzer
+done
 
-# Copy seed corpora (this helps fuzzing efficiency and reward chances)
-cp -r corpus/* $OUT/ 2>/dev/null || true
+# Copy seed corpora.
+for corpus_dir in $SRC/hancock/fuzz/corpus/*/; do
+  name=$(basename "$corpus_dir")
+  zip -j "$OUT/fuzz_${name}_seed_corpus.zip" "$corpus_dir"* 2>/dev/null || true
+done

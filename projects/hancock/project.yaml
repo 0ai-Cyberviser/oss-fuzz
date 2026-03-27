@@ -1,6 +1,6 @@
 homepage: "https://github.com/0ai-Cyberviser/Hancock"
 language: python
-primary_contact: "0ai@cyberviserai.com"   # ← CHANGE TO YOUR REAL GOOGLE ACCOUNT EMAIL
+primary_contact: "0ai@cyberviserai.com"
 main_repo: "https://github.com/0ai-Cyberviser/Hancock.git"
 sanitizers:
   - address
