@@ -25,5 +25,5 @@ done
 # Copy seed corpora.
 for corpus_dir in $SRC/hancock/fuzz/corpus/*/; do
   name=$(basename "$corpus_dir")
-  zip -j "$OUT/fuzz_${name}_seed_corpus.zip" "$corpus_dir"* 2>/dev/null || true
+  zip -j "$OUT/fuzz_${name}_seed_corpus.zip" "$corpus_dir"/* 2>/dev/null || true
 done
