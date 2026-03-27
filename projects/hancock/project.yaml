@@ -2,9 +2,12 @@ homepage: "https://github.com/0ai-Cyberviser/Hancock"
 language: python
 primary_contact: "0ai@cyberviserai.com"
 main_repo: "https://github.com/0ai-Cyberviser/Hancock.git"
+primary_contact: "cyberviser@proton.me"
+auto_ccs:
+  - "security@cyberviser.ai"
+fuzzing_engines:
+  - libfuzzer
 sanitizers:
   - address
   - undefined
-fuzzing_engines:
-  - libfuzzer
-auto_ccs: []
+main_repo: "https://github.com/0ai-Cyberviser/Hancock"
