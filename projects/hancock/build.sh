@@ -15,6 +15,17 @@
 #
 ################################################################################
 
+pip3 install -r requirements.txt
+
+# Build fuzzers in $OUT.
+for fuzzer in $(find $SRC/hancock/fuzz -name 'fuzz_*.py'); do
+  compile_python_fuzzer $fuzzer
+done
+
+# Copy seed corpora.
+for corpus_dir in $SRC/hancock/fuzz/corpus/*/; do
+  name=$(basename "$corpus_dir")
+  zip -j "$OUT/fuzz_${name}_seed_corpus.zip" "$corpus_dir"/* 2>/dev/null || true
 # Install project dependencies
 pip3 install -r "$SRC/hancock/requirements.txt"
 
