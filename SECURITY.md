@@ -5,19 +5,14 @@
 If you discover a security vulnerability in this repository, please report it
 responsibly. **Do not open a public issue.**
 
-Instead, please use one of the following methods:
+Please report vulnerabilities through
+[GitHub Security Advisories](https://github.com/0ai-Cyberviser/oss-fuzz/security/advisories).
+Click **"New draft security advisory"** and include as much detail as possible:
 
-1. **GitHub Security Advisories**: Navigate to the
-   [Security Advisories](https://github.com/0ai-Cyberviser/oss-fuzz/security/advisories)
-   page and click **"New draft security advisory"** to privately report the
-   vulnerability.
-
-2. **Email**: Send an email describing the vulnerability to the repository
-   maintainers. Include as much detail as possible, such as:
-   - A description of the vulnerability
-   - Steps to reproduce the issue
-   - Potential impact
-   - Suggested fix (if any)
+- A description of the vulnerability
+- Steps to reproduce the issue
+- Potential impact
+- Suggested fix (if any)
 
 ## Scope
 
