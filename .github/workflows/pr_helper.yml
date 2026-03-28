@@ -45,7 +45,7 @@ jobs:
         run: python infra/pr_helper.py
 
       - name: Leave comments
-        if: env.IS_INTERNAL == 'FALSE'
+        if: env.IS_INTERNAL == 'FALSE' && env.MESSAGE != ''
         uses: actions/github-script@v8
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
