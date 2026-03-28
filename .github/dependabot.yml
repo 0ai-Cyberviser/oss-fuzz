@@ -1,0 +1,49 @@
+version: 2
+updates:
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # Python - infra CI
+  - package-ecosystem: "pip"
+    directory: "/infra/ci"
+    schedule:
+      interval: "weekly"
+
+  # Python - infra build functions
+  - package-ecosystem: "pip"
+    directory: "/infra/build/functions"
+    schedule:
+      interval: "weekly"
+
+  # Python - cifuzz
+  - package-ecosystem: "pip"
+    directory: "/infra/cifuzz"
+    schedule:
+      interval: "weekly"
+
+  # npm - cifuzz
+  - package-ecosystem: "npm"
+    directory: "/infra/cifuzz"
+    schedule:
+      interval: "weekly"
+
+  # Go - jcc
+  - package-ecosystem: "gomod"
+    directory: "/infra/base-images/base-builder/jcc"
+    schedule:
+      interval: "weekly"
+
+  # Go - gocoverage
+  - package-ecosystem: "gomod"
+    directory: "/infra/base-images/base-runner/gocoverage"
+    schedule:
+      interval: "weekly"
+
+  # Ruby - docs
+  - package-ecosystem: "bundler"
+    directory: "/docs"
+    schedule:
+      interval: "weekly"
