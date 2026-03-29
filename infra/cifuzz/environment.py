@@ -40,6 +40,8 @@ def get_bool(env_var, default_value=None):
   of CIFuzz users specified 'false' for dry-run. So we need to special case
   this."""
   value = get(env_var, default_value)
+  if value is None:
+    return value
   if not isinstance(value, str):
     return bool(value)
 

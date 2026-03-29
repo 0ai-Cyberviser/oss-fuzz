@@ -14,15 +14,15 @@
 #
 ################################################################################
 
-Brotli==1.2.0
-hiredis==3.3.1
+Brotli==1.0.9
+hiredis==3.0.0
 PyYaml==6.0.2
 PyGithub==2.6.1
-grpcio==1.78.0
-google-auth==2.49.1
-google-cloud-datastore==2.23.0
-google-cloud-ndb==2.4.1
-google-cloud-scheduler==2.19.0
+grpcio==1.71.0
+google-auth==1.21.1
+google-cloud-datastore<2.0
+google-cloud-ndb==1.7.1
+google-cloud-scheduler==1.3.0
 google-cloud-storage==1.29.0
 google-api-core==1.22.2
 google-api-python-client==1.9.3
