@@ -31,3 +31,31 @@ to understand and address the issue before any public disclosure.
 
 Only the latest version of the code on the default branch is actively
 maintained and receives security updates.
+
+## Known Dependency Vulnerabilities
+
+### protobuf 3.20.2 (Accepted Risk)
+
+The `protobuf` package is pinned to version 3.20.2 in
+`infra/build/functions/requirements.txt` and `infra/cifuzz/requirements.txt`.
+This version has known vulnerabilities:
+
+- **JSON recursion depth bypass** (patched in 5.29.6+)
+- **Potential Denial of Service** (patched in 4.25.8+)
+
+**Why it cannot be upgraded:** The `google-cloud-datastore<2.0` and
+`google-cloud-ndb==1.7.1` packages ship pre-compiled protobuf descriptor files
+(`_pb2.py`) generated with protobuf 3.x. These descriptors are incompatible
+with the protobuf 4.x+ runtime, which raises `TypeError: Descriptors cannot be
+created directly` at import time. The `clusterfuzz==2.5.9` package further pins
+`google-cloud-datastore==1.12.0`, reinforcing this constraint.
+
+Upgrading protobuf requires simultaneously upgrading the entire Google Cloud
+dependency stack (`google-cloud-datastore>=2.0`, `google-cloud-ndb>=2.0`,
+`google-cloud-scheduler>=2.0`, `google-api-core>=2.0`) and updating all
+call sites to the new APIs. This is tracked as a future improvement.
+
+**Mitigation:** This infrastructure code runs in controlled server-side
+environments, not exposed to untrusted protobuf input. The upstream
+[google/oss-fuzz](https://github.com/google/oss-fuzz) repository uses the same
+pinned version.
