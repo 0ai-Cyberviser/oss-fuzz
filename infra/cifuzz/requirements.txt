@@ -1,4 +1,4 @@
-clusterfuzz==2.5.9
+clusterfuzz==2.6.0
 requests==2.33.0
 protobuf==5.29.6
 requests==2.28.0
