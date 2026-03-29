@@ -497,7 +497,8 @@ class BuildImageImplTest(unittest.TestCase):
 
   @mock.patch('common_utils.docker_build')
   @mock.patch('common_utils.check_project_exists')
-  def test_build_image_impl_project_not_exists(self, mock_check,
+  @mock.patch('common_utils.is_base_image', return_value=False)
+  def test_build_image_impl_project_not_exists(self, mock_is_base, mock_check,
                                                  mock_docker_build):
     """Tests build_image_impl returns False when project doesn't exist."""
     mock_check.return_value = False
