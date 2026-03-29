@@ -32,6 +32,6 @@ protobuf==3.20.2
 protobuf==5.29.6
 protobuf==3.20.2
 beautifulsoup4==4.14.3
-protobuf==7.34.1
+protobuf==5.29.6
 beautifulsoup4==4.11.1
 wrapt==1.17.2
