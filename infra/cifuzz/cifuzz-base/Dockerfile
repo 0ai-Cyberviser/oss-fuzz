@@ -40,6 +40,10 @@ RUN cd ${OSS_FUZZ_ROOT} && npm install ${OSS_FUZZ_ROOT}/infra/cifuzz
 
 
 ENV PYTHONUNBUFFERED=1
+# Use pure-Python protobuf implementation for compatibility with clusterfuzz's
+# generated protobuf code and the protobuf version pinned in
+# infra/cifuzz/requirements.txt.
+ENV PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
 
 # Python file to execute when the docker container starts up.
 # We can't use the env var $OSS_FUZZ_ROOT here. Since it's a constant env var,
