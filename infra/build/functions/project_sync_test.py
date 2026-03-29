@@ -66,7 +66,7 @@ class CloudSchedulerClient:
     self.schedulers = []
 
   # pylint: disable=no-self-use
-  def location_path(self, project_id, location_id):
+  def common_location_path(self, project_id, location_id):
     """Return project path."""
     return f'projects/{project_id}/location/{location_id}'
 
