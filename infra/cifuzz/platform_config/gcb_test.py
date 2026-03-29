@@ -29,7 +29,7 @@ class GcbPlatformConfigTest(unittest.TestCase):
   """Tests for Google Cloud Build PlatformConfig."""
 
   def setUp(self):
-    test_helpers.patch_environ(self)
+    test_helpers.patch_environ(self, empty=True)
     self.platform_conf = platform_config.gcb.PlatformConfig()
 
   def test_project_src_path_default(self):
