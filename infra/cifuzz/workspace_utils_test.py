@@ -111,9 +111,10 @@ class WorkspaceTest(unittest.TestCase):
         self.workspace.sarif,
     ]
     for path in properties:
+      is_under_workspace = os.path.commonpath([self.workspace_path, path]) == self.workspace_path
       self.assertTrue(
-          path.startswith(self.workspace_path),
-          f'{path} does not start with workspace path {self.workspace_path}')
+          is_under_workspace,
+          f'{path} is not under workspace path {self.workspace_path}')
 
 
 if __name__ == '__main__':
