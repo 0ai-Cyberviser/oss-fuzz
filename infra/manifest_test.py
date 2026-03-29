@@ -13,6 +13,7 @@
 # limitations under the License.
 """Tests for manifest module."""
 
+import subprocess
 import unittest
 from unittest import mock
 
@@ -82,14 +83,11 @@ class PushManifestTest(unittest.TestCase):
   def test_push_manifest_docker_pull_failure(self, mock_run):
     """Tests that push_manifest raises exception on docker pull failure."""
     # Make the first docker pull fail
-    mock_run.side_effect = [
-        Exception('Docker pull failed'),
-    ]
+    mock_run.side_effect = subprocess.CalledProcessError(
+        1, ['docker', 'pull', 'gcr.io/test/image'])
 
-    with self.assertRaises(Exception) as context:
+    with self.assertRaises(subprocess.CalledProcessError):
       manifest.push_manifest('gcr.io/test/image')
-
-    self.assertIn('Docker pull failed', str(context.exception))
 
   @mock.patch('subprocess.run')
   def test_push_manifest_docker_tag_failure(self, mock_run):
@@ -97,13 +95,13 @@ class PushManifestTest(unittest.TestCase):
     # Make the first tag operation fail
     mock_run.side_effect = [
         mock.Mock(returncode=0),  # pull succeeds
-        Exception('Docker tag failed'),  # tag fails
+        subprocess.CalledProcessError(
+            1, ['docker', 'tag', 'gcr.io/test/image',
+                'gcr.io/test/image:manifest-amd64']),
     ]
 
-    with self.assertRaises(Exception) as context:
+    with self.assertRaises(subprocess.CalledProcessError):
       manifest.push_manifest('gcr.io/test/image')
-
-    self.assertIn('Docker tag failed', str(context.exception))
 
   @mock.patch('subprocess.run')
   def test_push_manifest_manifest_create_failure(self, mock_run):
@@ -115,13 +113,11 @@ class PushManifestTest(unittest.TestCase):
         mock.Mock(returncode=0),  # push amd64
         mock.Mock(returncode=0),  # pull arm
         mock.Mock(returncode=0),  # tag arm64
-        Exception('Manifest create failed'),  # manifest create fails
+        subprocess.CalledProcessError(1, ['docker', 'manifest', 'create']),
     ]
 
-    with self.assertRaises(Exception) as context:
+    with self.assertRaises(subprocess.CalledProcessError):
       manifest.push_manifest('gcr.io/test/image')
-
-    self.assertIn('Manifest create failed', str(context.exception))
 
 
 class MainTest(unittest.TestCase):
@@ -157,9 +153,10 @@ class MainTest(unittest.TestCase):
   @mock.patch('subprocess.run')
   def test_main_gcloud_failure(self, mock_run, mock_push_manifest):
     """Tests that main fails when gcloud command fails."""
-    mock_run.side_effect = Exception('gcloud failed')
+    mock_run.side_effect = subprocess.CalledProcessError(
+        1, ['gcloud', 'projects', 'list', '--limit=1'])
 
-    with self.assertRaises(Exception):
+    with self.assertRaises(subprocess.CalledProcessError):
       manifest.main()
 
     # push_manifest should not be called if gcloud fails
