@@ -60,7 +60,7 @@ class GetTest(unittest.TestCase):
   """Tests for get."""
 
   def setUp(self):
-    test_helpers.patch_environ(self)
+    test_helpers.patch_environ(self, empty=True)
 
   def test_unset_variable_returns_default(self):
     """Tests that an unset variable returns the default value."""
