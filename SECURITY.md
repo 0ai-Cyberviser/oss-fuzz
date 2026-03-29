@@ -31,3 +31,36 @@ to understand and address the issue before any public disclosure.
 
 Only the latest version of the code on the default branch is actively
 maintained and receives security updates.
+
+## Known Security Constraints
+
+### Protobuf Dependency Limitation
+
+**Current Status**: This repository is constrained to protobuf 3.20.3 due to dependencies.
+
+**Constraint Chain**:
+```
+infra/cifuzz/requirements.txt
+  └── clusterfuzz==2.6.0
+      └── google-cloud-datastore==1.12.0
+          └── protobuf>=3.4.0,<4.0.0
+```
+
+**Known Vulnerabilities**: protobuf 3.20.3 has known CVEs that are patched in versions 4.25.8+, 5.29.6+:
+- JSON recursion depth bypass (CVE affecting versions < 5.29.6)
+- Denial of Service via uncontrolled recursion (CVE affecting versions < 4.25.8)
+
+**Why Not Upgraded**:
+- protobuf 4.x+ is incompatible with google-cloud-datastore 1.12.0
+- clusterfuzz 2.6.0 (latest) still requires google-cloud-datastore==1.12.0
+- No version path exists between 3.20.3 and 4.21.x (no 3.21.x series)
+
+**Risk Assessment**: The vulnerabilities primarily enable DoS attacks through crafted protobuf messages. OSS-Fuzz infrastructure controls input sources, reducing exploitation risk.
+
+**Resolution Path**: This constraint will be resolved when:
+- clusterfuzz releases a version supporting google-cloud-datastore 2.x+, OR
+- An alternative to the clusterfuzz dependency is implemented
+
+**Upstream Alignment**: The upstream google/oss-fuzz repository has the same constraint. This fork maintains alignment with upstream.
+
+*Last assessed: 2026-03-29*
