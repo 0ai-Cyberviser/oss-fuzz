@@ -20,7 +20,7 @@ PROJECT_GROUP_ID=org.eclipse.jetty
 PROJECT_ARTIFACT_ID=jetty-project
 MAIN_REPOSITORY=https://github.com/eclipse/jetty.project
 
-MAVEN_ARGS="-Dmaven.test.skip=true -Djavac.src.version=11 -Djavac.target.version=11 -Denforcer.skip=true -DskipTests"
+MAVEN_ARGS="-DskipTests -Djavac.src.version=11 -Djavac.target.version=11 -Denforcer.skip=true"
 
 mv $SRC/{*.zip,*.dict} $OUT
 
