@@ -15,7 +15,6 @@
 import os
 import unittest
 
-import workspace_utils
 import test_helpers
 
 
