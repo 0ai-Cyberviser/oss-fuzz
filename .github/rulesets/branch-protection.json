@@ -1,0 +1,31 @@
+{
+    "name": "oss-fuzz branch protection",
+    "target": "branch",
+    "enforcement": "disabled",
+    "conditions": {
+        "ref_name": {
+            "include": [
+                "~DEFAULT_BRANCH"
+            ],
+            "exclude": []
+        }
+    },
+    "rules": [
+        {
+            "type": "pull_request",
+            "parameters": {
+                "require_code_owner_review": false,
+                "require_last_push_approval": false,
+                "dismiss_stale_reviews_on_push": false,
+                "required_approving_review_count": 1,
+                "required_review_thread_resolution": false
+            }
+        },
+        {
+            "type": "deletion"
+        },
+        {
+            "type": "non_fast_forward"
+        }
+    ]
+}
