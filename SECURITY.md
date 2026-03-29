@@ -32,35 +32,30 @@ to understand and address the issue before any public disclosure.
 Only the latest version of the code on the default branch is actively
 maintained and receives security updates.
 
-## Known Security Constraints
+## Known Dependency Vulnerabilities
 
-### Protobuf Dependency Limitation
+### protobuf 3.20.2 (Accepted Risk)
 
-**Current Status**: This repository is constrained to protobuf 3.20.3 due to dependencies.
+The `protobuf` package is pinned to version 3.20.2 in
+`infra/build/functions/requirements.txt` and `infra/cifuzz/requirements.txt`.
+This version has known vulnerabilities:
 
-**Constraint Chain**:
-```
-infra/cifuzz/requirements.txt
-  └── clusterfuzz==2.6.0
-      └── google-cloud-datastore==1.12.0
-          └── protobuf>=3.4.0,<4.0.0
-```
+- **JSON recursion depth bypass** (patched in 5.29.6+)
+- **Potential Denial of Service** (patched in 4.25.8+)
 
-**Known Vulnerabilities**: protobuf 3.20.3 has known CVEs that are patched in versions 4.25.8+, 5.29.6+:
-- JSON recursion depth bypass (CVE affecting versions < 5.29.6)
-- Denial of Service via uncontrolled recursion (CVE affecting versions < 4.25.8)
+**Why it cannot be upgraded:** The `google-cloud-datastore<2.0` and
+`google-cloud-ndb==1.7.1` packages ship pre-compiled protobuf descriptor files
+(`_pb2.py`) generated with protobuf 3.x. These descriptors are incompatible
+with the protobuf 4.x+ runtime, which raises `TypeError: Descriptors cannot be
+created directly` at import time. The `clusterfuzz==2.5.9` package further pins
+`google-cloud-datastore==1.12.0`, reinforcing this constraint.
 
-**Why Not Upgraded**:
-- protobuf 4.x+ is incompatible with google-cloud-datastore 1.12.0
-- clusterfuzz 2.6.0 (latest) still requires google-cloud-datastore==1.12.0
-- No version path exists between 3.20.3 and 4.21.x (no 3.21.x series)
+Upgrading protobuf requires simultaneously upgrading the entire Google Cloud
+dependency stack (`google-cloud-datastore>=2.0`, `google-cloud-ndb>=2.0`,
+`google-cloud-scheduler>=2.0`, `google-api-core>=2.0`) and updating all
+call sites to the new APIs. This is tracked as a future improvement.
 
-**Risk Assessment**: The vulnerabilities primarily enable DoS attacks through crafted protobuf messages. OSS-Fuzz infrastructure controls input sources, reducing exploitation risk.
-
-**Resolution Path**: This constraint will be resolved when:
-- clusterfuzz releases a version supporting google-cloud-datastore 2.x+, OR
-- An alternative to the clusterfuzz dependency is implemented
-
-**Upstream Alignment**: The upstream google/oss-fuzz repository has the same constraint. This fork maintains alignment with upstream.
-
-*Last assessed: 2026-03-29*
+**Mitigation:** This infrastructure code runs in controlled server-side
+environments, not exposed to untrusted protobuf input. The upstream
+[google/oss-fuzz](https://github.com/google/oss-fuzz) repository uses the same
+pinned version.
