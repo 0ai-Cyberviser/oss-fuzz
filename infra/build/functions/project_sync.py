@@ -104,7 +104,8 @@ def create_scheduler(cloud_scheduler_client, project_name, schedule, tag,
   location_id = os.environ.get('FUNCTION_REGION')
   parent = cloud_scheduler_client.common_location_path(project_id, location_id)
   job = {
-      'name': parent + '/jobs/' + project_name + '-scheduler-' + tag,
+      'name': cloud_scheduler_client.job_path(
+          project_id, location_id, project_name + '-scheduler-' + tag),
       'pubsub_target': {
           'topic_name': 'projects/' + project_id + '/topics/' + topic,
           'data': project_name.encode()
