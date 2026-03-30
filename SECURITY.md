@@ -34,28 +34,25 @@ maintained and receives security updates.
 
 ## Known Dependency Vulnerabilities
 
-### protobuf 3.20.2 (Accepted Risk)
+### protobuf (resolved in 5.29.6)
 
-The `protobuf` package is pinned to version 3.20.2 in
+The `protobuf` package is pinned to version 5.29.6 in
 `infra/build/functions/requirements.txt` and `infra/cifuzz/requirements.txt`.
-This version has known vulnerabilities:
+This version patches the following previously known vulnerabilities:
 
 - **JSON recursion depth bypass** (patched in 5.29.6+)
 - **Potential Denial of Service** (patched in 4.25.8+)
 
-**Why it cannot be upgraded:** The `google-cloud-datastore<2.0` and
-`google-cloud-ndb==1.7.1` packages ship pre-compiled protobuf descriptor files
-(`_pb2.py`) generated with protobuf 3.x. These descriptors are incompatible
-with the protobuf 4.x+ runtime, which raises `TypeError: Descriptors cannot be
-created directly` at import time. The `clusterfuzz==2.5.9` package further pins
-`google-cloud-datastore==1.12.0`, reinforcing this constraint.
+**Runtime compatibility:** The `google-cloud-datastore<2.0`,
+`google-cloud-ndb==1.7.1`, and `clusterfuzz` packages ship pre-compiled
+protobuf descriptor files (`_pb2.py`) generated with protobuf 3.x. These
+descriptors are incompatible with the protobuf 4.x+ C extension runtime, which
+raises `TypeError: Descriptors cannot be created directly` at import time.
+The `.github/workflows/infra_tests.yml` workflow therefore sets
+`PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python` so the pure-Python protobuf
+runtime is used, which is backward-compatible with those generated files.
 
-Upgrading protobuf requires simultaneously upgrading the entire Google Cloud
-dependency stack (`google-cloud-datastore>=2.0`, `google-cloud-ndb>=2.0`,
-`google-cloud-scheduler>=2.0`, `google-api-core>=2.0`) and updating all
-call sites to the new APIs. This is tracked as a future improvement.
-
-**Mitigation:** This infrastructure code runs in controlled server-side
-environments, not exposed to untrusted protobuf input. The upstream
-[google/oss-fuzz](https://github.com/google/oss-fuzz) repository uses the same
-pinned version.
+A full upgrade of the entire Google Cloud dependency stack
+(`google-cloud-datastore>=2.0`, `google-cloud-ndb>=2.0`,
+`google-cloud-scheduler>=2.0`, `google-api-core>=2.0`) would remove the need
+for this workaround and is tracked as a future improvement.
