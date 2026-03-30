@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.asynchttpclient</groupId>
             <artifactId>async-http-client</artifactId>
-            <version>3.0.8</version>
+            <version>Fuzzing-SNAPSHOT</version>
         </dependency>
 
         <dependency>
