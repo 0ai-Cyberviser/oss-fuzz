@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
-            <version>1.11.4</version>
+            <version>Fuzzing-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
 
