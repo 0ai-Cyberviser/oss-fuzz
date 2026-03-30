@@ -21,6 +21,8 @@ pip3 install -r "$SRC/hancock/requirements.txt"
 # Compile each fuzz target using the OSS-Fuzz Python helper
 FUZZ_DIR="$SRC/hancock/fuzz"
 
+# Ensure that unmatched globs expand to nothing so the loop is skipped
+shopt -s nullglob
 for fuzzer in "$FUZZ_DIR"/fuzz_*.py; do
   fuzzer_basename=$(basename "$fuzzer" .py)
 
