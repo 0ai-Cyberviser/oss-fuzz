@@ -20,18 +20,12 @@ PROJECT_GROUP_ID=org.eclipse.jetty
 PROJECT_ARTIFACT_ID=jetty-project
 MAIN_REPOSITORY=https://github.com/eclipse/jetty.project
 
-MAVEN_ARGS="-DskipTests -Djavac.src.version=11 -Djavac.target.version=11 -Denforcer.skip=true"
+MAVEN_ARGS="-Dmaven.test.skip=true -Djavac.src.version=11 -Djavac.target.version=11 -Denforcer.skip=true -DskipTests"
 
 mv $SRC/{*.zip,*.dict} $OUT
 
 function set_project_version_in_fuzz_targets_dependency {
-  PROJECT_VERSION=$(cd $PROJECT && $MVN -B org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -q -DforceStdout 2>/dev/null | tail -n 1)
-
-  if [[ -z "${PROJECT_VERSION}" || "${PROJECT_VERSION}" == *"[ERROR]"* ]]; then
-    echo "ERROR: Unable to determine Jetty project.version via Maven (got: '${PROJECT_VERSION}')." >&2
-    exit 1
-  fi
-
+  PROJECT_VERSION=$(cd $PROJECT && $MVN org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -q -DforceStdout)
   FUZZ_TARGET_DEPENDENCIES=":jetty-http :jetty-server :jetty-util :jetty-io :jetty-runner :jetty-client .http2:http2-common .http2:http2-server"
   
   for dependency in $FUZZ_TARGET_DEPENDENCIES; do

@@ -37,11 +37,7 @@ RUN git clone --depth 1 https://github.com/dvyukov/go-fuzz-corpus && \
 COPY project-parent $SRC/project-parent/
 
 RUN rm -rf $SRC/project-parent/jetty
-# Pin to jetty-9.4.x branch: fuzz targets use 9.4.x APIs (javax.servlet,
-# AbstractHandler, etc.) and build.sh rewrites pom.xml dependency versions to
-# the checked-out project.version.  Pinning here ensures the built fuzzers
-# actually run on a Jetty release that includes the CVE-2023-44487 fix (≥9.4.54).
-RUN git clone --depth 1 --branch jetty-9.4.x https://github.com/eclipse/jetty.project $SRC/project-parent/jetty
+RUN git clone --depth 1 https://github.com/eclipse/jetty.project $SRC/project-parent/jetty
 
 # required by jetty's asciidoctor-maven-plugin
 RUN apt-get update && apt-get -y install fontconfig

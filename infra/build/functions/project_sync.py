@@ -102,30 +102,27 @@ def create_scheduler(cloud_scheduler_client, project_name, schedule, tag,
   """Creates schedulers for new projects."""
   project_id = os.environ.get('GCP_PROJECT')
   location_id = os.environ.get('FUNCTION_REGION')
-  parent = cloud_scheduler_client.common_location_path(project_id, location_id)
+  parent = cloud_scheduler_client.location_path(project_id, location_id)
   job = {
-      'name':
-          cloud_scheduler_client.job_path(project_id, location_id,
-                                          project_name + '-scheduler-' + tag),
+      'name': parent + '/jobs/' + project_name + '-scheduler-' + tag,
       'pubsub_target': {
           'topic_name': 'projects/' + project_id + '/topics/' + topic,
           'data': project_name.encode()
       },
-      'schedule':
-          schedule
+      'schedule': schedule
   }
 
   try:
-    existing_job = cloud_scheduler_client.get_job(name=job['name'])
+    existing_job = cloud_scheduler_client.get_job(job['name'])
   except exceptions.NotFound:
     existing_job = None
 
   if existing_job:
     if existing_job.schedule != schedule:
       update_mask = {'paths': ['schedule']}
-      cloud_scheduler_client.update_job(job=job, update_mask=update_mask)
+      cloud_scheduler_client.update_job(job, update_mask)
   else:
-    cloud_scheduler_client.create_job(parent=parent, job=job)
+    cloud_scheduler_client.create_job(parent, job)
 
 
 def delete_scheduler(cloud_scheduler_client, project_name, tag):
@@ -134,7 +131,7 @@ def delete_scheduler(cloud_scheduler_client, project_name, tag):
   location_id = os.environ.get('FUNCTION_REGION')
   name = cloud_scheduler_client.job_path(project_id, location_id,
                                          project_name + '-scheduler-' + tag)
-  cloud_scheduler_client.delete_job(name=name)
+  cloud_scheduler_client.delete_job(name)
 
 
 def delete_project(cloud_scheduler_client, project):

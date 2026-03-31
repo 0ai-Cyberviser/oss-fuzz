@@ -66,9 +66,9 @@ class CloudSchedulerClient:
     self.schedulers = []
 
   # pylint: disable=no-self-use
-  def common_location_path(self, project_id, location_id):
+  def location_path(self, project_id, location_id):
     """Return project path."""
-    return f'projects/{project_id}/locations/{location_id}'
+    return f'projects/{project_id}/location/{location_id}'
 
   def create_job(self, parent, job):
     """Simulate create job."""
@@ -86,7 +86,7 @@ class CloudSchedulerClient:
   # pylint: disable=no-self-use
   def job_path(self, project_id, location_id, name):
     """Return job path."""
-    return f'projects/{project_id}/locations/{location_id}/jobs/{name}'
+    return f'projects/{project_id}/location/{location_id}/jobs/{name}'
 
   def delete_job(self, name):
     """Simulate delete jobs."""
@@ -165,7 +165,7 @@ class TestDataSync(unittest.TestCase):
 
       self.assertCountEqual([
           {
-              'name': 'projects/test-project/locations/us-central1/jobs/'
+              'name': 'projects/test-project/location/us-central1/jobs/'
                       'test1-scheduler-fuzzing',
               'pubsub_target': {
                   'topic_name': 'projects/test-project/topics/request-build',
@@ -174,7 +174,7 @@ class TestDataSync(unittest.TestCase):
               'schedule': '0 8 * * *'
           },
           {
-              'name': 'projects/test-project/locations/us-central1/jobs/'
+              'name': 'projects/test-project/location/us-central1/jobs/'
                       'test1-scheduler-coverage',
               'pubsub_target': {
                   'topic_name':
@@ -185,7 +185,7 @@ class TestDataSync(unittest.TestCase):
               'schedule': '0 6 * * *'
           },
           {
-              'name': 'projects/test-project/locations/us-central1/jobs/'
+              'name': 'projects/test-project/location/us-central1/jobs/'
                       'test1-scheduler-introspector',
               'pubsub_target': {
                   'topic_name':
@@ -196,7 +196,7 @@ class TestDataSync(unittest.TestCase):
               'schedule': '0 10 * * *'
           },
           {
-              'name': 'projects/test-project/locations/us-central1/jobs/'
+              'name': 'projects/test-project/location/us-central1/jobs/'
                       'test2-scheduler-fuzzing',
               'pubsub_target': {
                   'topic_name': 'projects/test-project/topics/request-build',
@@ -205,7 +205,7 @@ class TestDataSync(unittest.TestCase):
               'schedule': '0 7 * * *'
           },
           {
-              'name': 'projects/test-project/locations/us-central1/jobs/'
+              'name': 'projects/test-project/location/us-central1/jobs/'
                       'test2-scheduler-coverage',
               'pubsub_target': {
                   'topic_name':
@@ -216,7 +216,7 @@ class TestDataSync(unittest.TestCase):
               'schedule': '0 6 * * *'
           },
           {
-              'name': 'projects/test-project/locations/us-central1/jobs/'
+              'name': 'projects/test-project/location/us-central1/jobs/'
                       'test2-scheduler-introspector',
               'pubsub_target': {
                   'topic_name':
