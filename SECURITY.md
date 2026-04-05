@@ -28,7 +28,7 @@ repository), please report it responsibly.
 1. **Do not open a public issue.** Security vulnerabilities should be reported
    privately so that they can be addressed before public disclosure.
 2. **Use GitHub Private Vulnerability Reporting.** Navigate to the
-   [Security Advisories](https://github.com/0ai-Cyberviser/oss-fuzz/security/advisories)
+   [Security Advisories](../../security/advisories)
    page and click **"Report a vulnerability"** to submit a private report.
 3. **Alternatively, contact via email.** You may email
    [oss-fuzz-team@google.com](mailto:oss-fuzz-team@google.com) with details of
