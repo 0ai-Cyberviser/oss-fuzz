@@ -98,7 +98,7 @@ def main():
 
   # Bypasses PRs of the internal members.
   if github.is_author_internal_member():
-    save_env(None, None, True)
+    save_env('', False, True)
     return
 
   message = ''
