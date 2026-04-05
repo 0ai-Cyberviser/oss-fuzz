@@ -1,4 +1,4 @@
-# Copyright 2020 Google Inc.
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,22 +15,7 @@
 ################################################################################
 
 FROM gcr.io/oss-fuzz-base/base-builder
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        bison \
-        cmake \
-        flex \
-        libfl-dev \
-        libkrb5-dev \
-        libmaxminddb-dev \
-        libpcap-dev \
-        libzmq3-dev \
-        libssl-dev \
-        ninja-build \
-        patchelf \
-        zlib1g-dev \
-  && rm -rf /var/lib/apt/lists/*
-
-RUN git clone --depth 1 --recursive https://github.com/zeek/zeek zeek
-WORKDIR zeek
+RUN apt-get update && apt-get install -y cmake make
+RUN git clone --depth 1 https://github.com/ibireme/yyjson.git
+WORKDIR yyjson
 COPY build.sh $SRC/
