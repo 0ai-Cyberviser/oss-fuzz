@@ -45,16 +45,21 @@ jobs:
         run: python infra/pr_helper.py
 
       - name: Leave comments
-        if: env.IS_INTERNAL == 'FALSE'
+        if: env.IS_INTERNAL == 'False'
         uses: actions/github-script@v8
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
+            const body = process.env.MESSAGE;
+            if (!body || !body.trim()) {
+              console.log('No message to post, skipping comment.');
+              return;
+            }
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: process.env.MESSAGE
+              body: body
             })
 
       - name: Add labels for valid PR
