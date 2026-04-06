@@ -17,19 +17,5 @@
 FROM gcr.io/oss-fuzz-base/base-runner
 RUN apt-get update && apt-get install -y valgrind zip
 
-# Installing GDB 12, re https://github.com/google/oss-fuzz/issues/7513.
-RUN apt-get update && apt-get install -y build-essential libgmp-dev ca-certificates wget xz-utils && \
-    (wget -t 5 --retry-connrefused --waitretry=5 --timeout=30 \
-      https://ftpmirror.gnu.org/gdb/gdb-12.1.tar.xz \
-     || wget -t 5 --retry-connrefused --waitretry=5 --timeout=30 \
-      https://ftp.gnu.org/gnu/gdb/gdb-12.1.tar.xz) && \
-    tar -xf gdb-12.1.tar.xz && \
-    cd gdb-12.1 && \
-    ./configure && \
-    make -j "$(expr $(nproc) / 2)" && \
-    make install && \
-    cd .. && \
-    rm -rf gdb-12.1* && \
-    apt-get remove --purge -y build-essential libgmp-dev && \
-    apt-get autoremove -y && \
-    rm -rf /var/lib/apt/lists/*
+# Installing GDB, re https://github.com/google/oss-fuzz/issues/7513.
+RUN apt-get install -y gdb
