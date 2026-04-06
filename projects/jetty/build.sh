@@ -1,4 +1,5 @@
 #!/bin/bash -eu
+set -o pipefail
 # Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");

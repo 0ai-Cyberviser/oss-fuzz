@@ -36,9 +36,9 @@ def get(env_var, default_value=None):
 
 
 def get_bool(env_var, default_value=None):
-  """Returns a boolean environment variable value. This is needed because a lot
-  of CIFuzz users specified 'false' for dry-run. So we need to special case
-  this."""
+  """Returns a boolean environment variable value, or None if the variable is
+  unset and |default_value| is None. This is needed because a lot of CIFuzz
+  users specified 'false' for dry-run. So we need to special case this."""
   value = get(env_var, default_value)
   if value is None:
     return value
