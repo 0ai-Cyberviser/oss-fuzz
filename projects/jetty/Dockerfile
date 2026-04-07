@@ -37,7 +37,7 @@ RUN git clone --depth 1 https://github.com/dvyukov/go-fuzz-corpus && \
 COPY project-parent $SRC/project-parent/
 
 RUN rm -rf $SRC/project-parent/jetty
-RUN git clone --depth 1 https://github.com/eclipse/jetty.project $SRC/project-parent/jetty
+RUN git clone --depth 1 -b jetty-9.4.x https://github.com/eclipse/jetty.project $SRC/project-parent/jetty
 
 # required by jetty's asciidoctor-maven-plugin
 RUN apt-get update && apt-get -y install fontconfig
