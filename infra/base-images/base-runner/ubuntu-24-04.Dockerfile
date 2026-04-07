@@ -57,11 +57,25 @@ COPY install_deps_ubuntu_24_04.sh /
 RUN /install_deps_ubuntu_24_04.sh && rm /install_deps_ubuntu_24_04.sh
 
 ENV CODE_COVERAGE_SRC=/opt/code_coverage
+ARG CODE_COVERAGE_REV=edba4873b5e8a390e977a64c522db2df18a8b27d
 # Pin coverage to the same as in the base builder:
 # https://github.com/google/oss-fuzz/blob/master/infra/base-images/base-builder/install_python.sh#L22
-RUN git clone https://chromium.googlesource.com/chromium/src/tools/code_coverage $CODE_COVERAGE_SRC && \
-    cd /opt/code_coverage && \
-    git checkout edba4873b5e8a390e977a64c522db2df18a8b27d && \
+# Retry the clone up to 5 times to handle transient 429 rate-limit errors from
+# chromium.googlesource.com.
+RUN set -eux; \
+    for i in 1 2 3 4 5; do \
+      rm -rf "$CODE_COVERAGE_SRC"; \
+      if git clone --filter=blob:none --no-checkout \
+           https://chromium.googlesource.com/chromium/src/tools/code_coverage \
+           "$CODE_COVERAGE_SRC"; then \
+        break; \
+      fi; \
+      echo "Clone attempt $i failed, retrying in $((i * 15))s..."; \
+      sleep $((i * 15)); \
+    done; \
+    cd "$CODE_COVERAGE_SRC" && \
+    git fetch --depth=1 origin "$CODE_COVERAGE_REV" && \
+    git checkout "$CODE_COVERAGE_REV" && \
     pip3 install wheel && \
     # If version "Jinja2==2.10" is in requirements.txt, bump it to a patch version that
     # supports upgrading its MarkupSafe dependency to a Python 3.11 compatible release:
@@ -132,7 +146,6 @@ COPY bad_build_check \
     parse_options.py \
     generate_differential_cov_report.py \
     profraw_update.py \
-
     targets_list \
     test_all.py \
     test_one.py \
