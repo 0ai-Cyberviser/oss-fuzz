@@ -60,21 +60,37 @@ ENV CODE_COVERAGE_SRC=/opt/code_coverage
 ARG CODE_COVERAGE_REV=edba4873b5e8a390e977a64c522db2df18a8b27d
 # Pin coverage to the same as in the base builder:
 # https://github.com/google/oss-fuzz/blob/master/infra/base-images/base-builder/install_python.sh#L22
-# Retry the clone up to 5 times to handle transient 429 rate-limit errors from
-# chromium.googlesource.com.
+# Retry clone and fetch up to 5 times each to handle transient HTTP errors
+# (429 rate-limit, 403 access denied) from chromium.googlesource.com.
 RUN set -eux; \
+    clone_ok=false; \
     for i in 1 2 3 4 5; do \
       rm -rf "$CODE_COVERAGE_SRC"; \
       if git clone --filter=blob:none --no-checkout \
            https://chromium.googlesource.com/chromium/src/tools/code_coverage \
            "$CODE_COVERAGE_SRC"; then \
+        clone_ok=true; \
         break; \
       fi; \
       echo "Clone attempt $i failed, retrying in $((i * 15))s..."; \
       sleep $((i * 15)); \
     done; \
+    if [ "$clone_ok" != "true" ]; then \
+      echo "ERROR: All clone attempts failed."; exit 1; \
+    fi; \
     cd "$CODE_COVERAGE_SRC" && \
-    git fetch --depth=1 origin "$CODE_COVERAGE_REV" && \
+    fetch_ok=false; \
+    for i in 1 2 3 4 5; do \
+      if git fetch --depth=1 origin "$CODE_COVERAGE_REV"; then \
+        fetch_ok=true; \
+        break; \
+      fi; \
+      echo "Fetch attempt $i failed, retrying in $((i * 15))s..."; \
+      sleep $((i * 15)); \
+    done; \
+    if [ "$fetch_ok" != "true" ]; then \
+      echo "ERROR: All fetch attempts failed."; exit 1; \
+    fi; \
     git checkout "$CODE_COVERAGE_REV" && \
     pip3 install wheel && \
     # If version "Jinja2==2.10" is in requirements.txt, bump it to a patch version that
