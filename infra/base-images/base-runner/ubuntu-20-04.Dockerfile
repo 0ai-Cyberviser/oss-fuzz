@@ -60,29 +60,47 @@ ENV CODE_COVERAGE_SRC=/opt/code_coverage
 ARG CODE_COVERAGE_REV=edba4873b5e8a390e977a64c522db2df18a8b27d
 # Pin coverage to the same as in the base builder:
 # https://github.com/google/oss-fuzz/blob/master/infra/base-images/base-builder/install_python.sh#L22
-# Retry the clone up to 5 times to handle transient 429 rate-limit errors from
-# chromium.googlesource.com.
+# Retry clone and fetch up to 5 times each to handle transient HTTP errors
+# (429 rate-limit, 403 access denied) from chromium.googlesource.com.
+# If all attempts fail, skip code_coverage setup so non-coverage builds can proceed.
 RUN set -eux; \
+    clone_ok=false; \
     for i in 1 2 3 4 5; do \
       rm -rf "$CODE_COVERAGE_SRC"; \
       if git clone --filter=blob:none --no-checkout \
            https://chromium.googlesource.com/chromium/src/tools/code_coverage \
            "$CODE_COVERAGE_SRC"; then \
+        clone_ok=true; \
         break; \
       fi; \
-      echo "Clone attempt $i failed, retrying in $((i * 15))s..."; \
-      sleep $((i * 15)); \
+      echo "Clone attempt $i failed"; \
+      if [ "$i" -lt 5 ]; then echo "retrying in $((i * 15))s..."; sleep $((i * 15)); fi; \
     done; \
-    cd "$CODE_COVERAGE_SRC" && \
-    git fetch --depth=1 origin "$CODE_COVERAGE_REV" && \
-    git checkout "$CODE_COVERAGE_REV" && \
-    pip3 install wheel && \
-    # If version "Jinja2==2.10" is in requirements.txt, bump it to a patch version that
-    # supports upgrading its MarkupSafe dependency to a Python 3.11 compatible release:
-    sed -i 's/Jinja2==2.10/Jinja2==2.10.3/' requirements.txt && \
-    pip3 install -r requirements.txt && \
-    pip3 install MarkupSafe==2.0.1 && \
-    pip3 install coverage==6.3.2
+    if [ "$clone_ok" = "true" ]; then \
+      cd "$CODE_COVERAGE_SRC"; \
+      fetch_ok=false; \
+      for i in 1 2 3 4 5; do \
+        if git fetch --depth=1 origin "$CODE_COVERAGE_REV"; then \
+          fetch_ok=true; \
+          break; \
+        fi; \
+        echo "Fetch attempt $i failed"; \
+        if [ "$i" -lt 5 ]; then echo "retrying in $((i * 15))s..."; sleep $((i * 15)); fi; \
+      done; \
+      if [ "$fetch_ok" = "true" ]; then \
+        git checkout "$CODE_COVERAGE_REV" && \
+        pip3 install wheel && \
+        sed -i 's/Jinja2==2.10/Jinja2==2.10.3/' requirements.txt && \
+        pip3 install -r requirements.txt && \
+        pip3 install MarkupSafe==2.0.1 && \
+        pip3 install coverage==6.3.2; \
+      else \
+        echo "WARNING: All fetch attempts failed. Skipping code_coverage setup."; \
+        rm -rf "$CODE_COVERAGE_SRC"; \
+      fi; \
+    else \
+      echo "WARNING: All clone attempts failed. Skipping code_coverage setup."; \
+    fi
 
 # Default environment options for various sanitizers.
 # Note that these match the settings used in ClusterFuzz and
