@@ -72,8 +72,8 @@ RUN set -eux; \
         clone_ok=true; \
         break; \
       fi; \
-      echo "Clone attempt $i failed, retrying in $((i * 15))s..."; \
-      sleep $((i * 15)); \
+      echo "Clone attempt $i failed"; \
+      if [ "$i" -lt 5 ]; then echo "retrying in $((i * 15))s..."; sleep $((i * 15)); fi; \
     done; \
     if [ "$clone_ok" != "true" ]; then \
       echo "ERROR: All clone attempts failed."; exit 1; \
@@ -85,8 +85,8 @@ RUN set -eux; \
         fetch_ok=true; \
         break; \
       fi; \
-      echo "Fetch attempt $i failed, retrying in $((i * 15))s..."; \
-      sleep $((i * 15)); \
+      echo "Fetch attempt $i failed"; \
+      if [ "$i" -lt 5 ]; then echo "retrying in $((i * 15))s..."; sleep $((i * 15)); fi; \
     done; \
     if [ "$fetch_ok" != "true" ]; then \
       echo "ERROR: All fetch attempts failed."; exit 1; \
