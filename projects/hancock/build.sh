@@ -1,5 +1,5 @@
 #!/bin/bash -eu
-# Copyright 2026 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 #
 ################################################################################
 
+pip3 install atheris
 pip3 install -r "$SRC/hancock/requirements.txt"
 
 FUZZ_DIR="$SRC/hancock/fuzz"
