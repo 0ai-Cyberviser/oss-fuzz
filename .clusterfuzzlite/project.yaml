@@ -1,1 +1,6 @@
 language: python
+coverage: true
+fuzzing_engines:
+- libfuzzer
+sanitizers:
+- address
