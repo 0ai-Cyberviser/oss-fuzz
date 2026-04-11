@@ -17,6 +17,7 @@ COPY . $SRC/oss-fuzz
 WORKDIR oss-fuzz
 COPY .clusterfuzzlite/build.sh $SRC/
 RUN cp .clusterfuzzlite/coverage_atheris_fuzzer.py infra
+RUN cp .clusterfuzzlite/advanced_coverage_atheris_fuzzer.py infra
 WORKDIR infra/
 RUN pip3 install --upgrade pip
 RUN pip3 install -r cifuzz/requirements.txt
