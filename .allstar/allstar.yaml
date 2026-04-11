@@ -1,0 +1,3 @@
+# Opt out of all Allstar checks for this forked repository.
+optConfig:
+  optOut: true
