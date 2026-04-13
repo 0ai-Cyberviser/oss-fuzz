@@ -14,7 +14,7 @@
 #
 ################################################################################
 
-Brotli==1.0.9
+Brotli==1.2.0
 hiredis==3.0.0
 PyYaml==6.0.2
 PyGithub==2.6.1
@@ -27,6 +27,6 @@ google-cloud-storage>=2.14.0,<3
 google-api-core>=2.15.0,<3
 google-api-python-client>=2.100.0,<3
 python-dateutil==2.8.1
-protobuf>=4.25.0,<6
+protobuf>=4.25.0,<8
 beautifulsoup4==4.11.1
 wrapt==1.17.2
