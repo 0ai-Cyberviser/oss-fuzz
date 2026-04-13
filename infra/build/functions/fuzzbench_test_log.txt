@@ -1,0 +1,17 @@
+--- Starting Local Execution with Docker ---
+--- Step 0: ---
+Step_details:
+{'name': 'gcr.io/oss-fuzz-base/mopt/example', 'args': ['bash', '-c', 'mkdir -p /workspace/libfuzzer_build/']}
+------
+Executing Docker Command:
+docker run --rm --cpus=0.5 -w /workspace/ -v /tmp/tmp3st6a1yl:/workspace gcr.io/oss-fuzz-base/mopt/example bash -c "mkdir -p /workspace/libfuzzer_build/"
+--- Container STDOUT ---
+--- Container STDERR ---
+--- Step 0 completed successfully --- Took 0.21593570709228516s
+
+--- Step 1: ---
+Step_details:
+{'name': 'gcr.io/cloud-builders/gsutil', 'args': ['-m', 'cp', '-r', 'gs://clusterfuzz-builds/example/None', '/workspace/libfuzzer_build/']}
+------
+Executing Docker Command:
+docker run --rm --cpus=0.5 -w /workspace/ -v /tmp/tmp3st6a1yl:/workspace gcr.io/cloud-builders/gsutil -m cp -r gs://clusterfuzz-builds/example/None /workspace/libfuzzer_build/
