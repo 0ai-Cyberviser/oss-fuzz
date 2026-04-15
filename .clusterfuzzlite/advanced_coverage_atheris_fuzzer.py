@@ -52,6 +52,9 @@ def TestOneInput(data):
   with mock.patch('get_coverage.OSSFuzzCoverage.get_target_coverage',
                   return_value=decoded_json):
     covered_files = oss_fuzz_coverage.get_files_covered_by_target(TARGET_NAME)
+    if covered_files is None:
+      logging.info('No coverage files collected for %s', TARGET_NAME)
+      return []
     logging.info('Coverage collected: %d files for %s', len(covered_files),
                  TARGET_NAME)
     return covered_files
