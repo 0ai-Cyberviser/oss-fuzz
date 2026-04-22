@@ -1,4 +1,4 @@
 clusterfuzz==2.5.9
 requests==2.33.0
-protobuf==5.29.6
+protobuf>=5.29.6,<6
 gsutil==5.20
