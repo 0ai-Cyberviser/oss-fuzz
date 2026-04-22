@@ -15,8 +15,13 @@
 #
 ################################################################################
 
-# Install project dependencies so fuzz targets can import modules
-pip3 install -r "$SRC/hancock/requirements.txt"
+# Install project dependencies for fuzzing
+pip3 install -r "$SRC/requirements.txt"
+
+# If the Hancock project has its own requirements, install them too
+if [ -f "$SRC/hancock/requirements.txt" ]; then
+  pip3 install -r "$SRC/hancock/requirements.txt"
+fi
 
 # Compile each fuzz target using the OSS-Fuzz Python helper
 FUZZ_DIR="$SRC/hancock/fuzz"
