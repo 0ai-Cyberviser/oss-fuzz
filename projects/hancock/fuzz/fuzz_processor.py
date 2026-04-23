@@ -88,31 +88,36 @@ def TestOneInput(data):
 
     # Choose processing operation
     operation = fdp.ConsumeIntInRange(0, 5)
-    remaining_data = fdp.ConsumeRemainingAsBytes()
 
     try:
         if operation == 0:
             # Encoding
             encoding_type = fdp.ConsumeIntInRange(0, 2)
+            remaining_data = fdp.ConsumeBytes(fdp.remaining_bytes())
             encode_data(remaining_data, encoding_type)
         elif operation == 1:
             # Decoding
             encoding_type = fdp.ConsumeIntInRange(0, 2)
+            remaining_data = fdp.ConsumeBytes(fdp.remaining_bytes())
             decode_data(remaining_data, encoding_type)
         elif operation == 2:
             # Hashing
             hash_type = fdp.ConsumeIntInRange(0, 4)
+            remaining_data = fdp.ConsumeBytes(fdp.remaining_bytes())
             hash_data(remaining_data, hash_type)
         elif operation == 3:
             # Compression
+            remaining_data = fdp.ConsumeBytes(fdp.remaining_bytes())
             compress_data(remaining_data)
         elif operation == 4:
             # Decompression
+            remaining_data = fdp.ConsumeBytes(fdp.remaining_bytes())
             decompress_data(remaining_data)
         else:
             # Text transformation
-            text = remaining_data.decode('utf-8', errors='ignore')
             transform_type = fdp.ConsumeIntInRange(0, 4)
+            remaining_data = fdp.ConsumeBytes(fdp.remaining_bytes())
+            text = remaining_data.decode('utf-8', errors='ignore')
             transform_text(text, transform_type)
     except (MemoryError, RecursionError, SystemError):
         pass

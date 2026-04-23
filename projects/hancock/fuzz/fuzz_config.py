@@ -94,16 +94,16 @@ def TestOneInput(data):
     try:
         if operation == 0:
             # Parse JSON config
-            config_data = fdp.ConsumeRemainingAsString()
+            config_data = fdp.ConsumeString(fdp.remaining_bytes())
             parsed = parse_json_config(config_data)
             validate_config_structure(parsed)
         elif operation == 1:
             # Parse INI config
-            config_data = fdp.ConsumeRemainingAsString()
+            config_data = fdp.ConsumeString(fdp.remaining_bytes())
             parse_ini_config(config_data)
         elif operation == 2:
             # Validate config structure
-            config_data = fdp.ConsumeRemainingAsString()
+            config_data = fdp.ConsumeString(fdp.remaining_bytes())
             try:
                 config = json.loads(config_data)
                 validate_config_structure(config)
@@ -125,7 +125,7 @@ def TestOneInput(data):
             # Apply defaults
             size1 = fdp.ConsumeIntInRange(1, 100)
             config_str = fdp.ConsumeUnicodeNoSurrogates(size1)
-            defaults_str = fdp.ConsumeRemainingAsString()
+            defaults_str = fdp.ConsumeString(fdp.remaining_bytes())
             try:
                 config = json.loads(config_str)
                 defaults = json.loads(defaults_str)

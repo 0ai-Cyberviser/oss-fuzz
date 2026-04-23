@@ -56,7 +56,7 @@ def TestOneInput(data):
 
     # Choose parsing strategy
     parse_type = fdp.ConsumeIntInRange(0, 2)
-    remaining_data = fdp.ConsumeRemainingAsBytes()
+    remaining_data = fdp.ConsumeBytes(fdp.remaining_bytes())
 
     try:
         if parse_type == 0:
