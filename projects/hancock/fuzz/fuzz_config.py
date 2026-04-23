@@ -134,8 +134,6 @@ def TestOneInput(data):
                 pass
     except (MemoryError, RecursionError, SystemError):
         pass
-    except Exception:
-        pass
 
 
 def main():
